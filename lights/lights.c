@@ -22,17 +22,16 @@ static int write_int(const char* path, int value){
     int fd = open(path, O_WRONLY);
     if (fd < 0) goto error;
     char buffer[sizeof(value)+1];
-    int count = sprintf(buffer, "%d\n", value);
-    int writed_count = write(fd, buffer, count);
-    close(fd);
-    if(writed_count > 0) errno=0;
+    sprintf(buffer, "%d\n", value);
+    if(write(fd, buffer, sizeof(buffer)) < 1) goto error;
+    errno = 0;
 
 error:
+    if(fd > 0) close(fd);
     return -errno;
 }
 
-static int rgb_to_brightness(const struct light_state_t* state){
-    int color = state->color;
+static int rgb_to_whiteblack(int color){
     return (
         (77*((color>>16)&0xff)) +
         (150*((color>>8)&0xff)) + 
@@ -44,7 +43,7 @@ static int set_light_backlight(struct light_device_t* device, const struct light
     (void)device;
     pthread_mutex_lock(&g_lock);
     int err = write_int(BRIGHTNESS_FILE,
-        rgb_to_brightness(state)
+        rgb_to_whiteblack(state->color)
     );
     pthread_mutex_unlock(&g_lock);
     return err;
