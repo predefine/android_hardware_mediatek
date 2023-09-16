@@ -60,7 +60,6 @@ int anim_fb_init(void){
 
 void anim_fb_deinit(void){
   munmap(fb_buf, fb_buf_size);
-
   close(fb_fd);
   return;
 }
