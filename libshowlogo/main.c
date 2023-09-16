@@ -33,3 +33,7 @@ void show_black_logo(void){
 void show_battery_capacity(int procent){
     (void)procent;
 }
+
+void anim_deinit(void){
+
+}
