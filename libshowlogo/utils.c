@@ -53,7 +53,7 @@ char* get_partition_path(char* partition_mount){
 int get_int_value(char *path){
     char text[32];
     int fd = open(path, 0);
-    if(fd < 0) return NULL;
+    if(fd < 0) return -1;
     read(fd, text, sizeof(text));
     return atoi(text);
 }

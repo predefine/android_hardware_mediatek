@@ -1,5 +1,7 @@
 #pragma once
 
+#include <linux/fb.h>
+
 // 8 Megabytes
 #define LOGO_PARTITION_SIZE 1<<23
 #define FB_PATH "/dev/graphics/fb0"
@@ -24,8 +26,22 @@ struct fstab* get_fstab(void);
 char* get_partition_path(char* partition_mount);
 
 // Vars
+// #framebuffer
 static int fb_fd = 0;
-static char* fb_ptr;
+static struct fb_var_screeninfo fbvscreeninfo;
+static struct fb_fix_screeninfo fbfscreeninfo;
+static int fb_width;
+static int fb_height;
+static int fb_size;
+static int fb_buf_size;
+static void* fb_buf;
+static int fb_bpp;
+static int fb_red_offset;
+static int fb_blue_offset;
+// #logo
 static char logo_data[LOGO_PARTITION_SIZE];
+// #fstab
 static char* fstab_path;
 static struct fstab* g_fstab;
+// #properties
+static int hwrotation;
