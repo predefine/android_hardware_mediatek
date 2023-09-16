@@ -1,6 +1,7 @@
 #include <log/log.h>
 #include <showlogo.h>
 #include <stdlib.h>
+#include <string.h>
 
 void anim_init(void){
     if(anim_logo_init()){
@@ -27,7 +28,8 @@ void set_anim_version(int ver){
 }
 
 void show_black_logo(void){
-
+    memset(fb_buf, 0, fb_buf_size);
+    anim_fb_disp_update();
 }
 
 void show_battery_capacity(int procent){
@@ -35,5 +37,5 @@ void show_battery_capacity(int procent){
 }
 
 void anim_deinit(void){
-
+    anim_fb_deinit();
 }

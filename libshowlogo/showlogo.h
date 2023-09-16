@@ -6,9 +6,15 @@
 #define LOGO_PARTITION_SIZE 1<<23
 #define FB_PATH "/dev/graphics/fb0"
 
+//framebuffer
+int anim_fb_init(void);
+void anim_fb_disp_update(void);
+void anim_fb_deinit(void);
+void anim_fb_addr_switch(void);
+
+//other
 void set_draw_mode(int draw_mode);
 void anim_init(void);
-int anim_fb_init(void);
 int anim_logo_init(void);
 void anim_deinit(void);
 void set_anim_version(int ver);
@@ -28,16 +34,16 @@ char* get_partition_path(char* partition_mount);
 // Vars
 // #framebuffer
 static int fb_fd = 0;
-static struct fb_var_screeninfo fbvscreeninfo;
-static struct fb_fix_screeninfo fbfscreeninfo;
-static int fb_width;
-static int fb_height;
-static int fb_size;
-static int fb_buf_size;
-static void* fb_buf;
-static int fb_bpp;
-static int fb_red_offset;
-static int fb_blue_offset;
+struct fb_var_screeninfo fbvscreeninfo;
+struct fb_fix_screeninfo fbfscreeninfo;
+int fb_width;
+int fb_height;
+int fb_size;
+int fb_buf_size;
+char* fb_buf;
+int fb_bpp;
+int fb_red_offset;
+int fb_blue_offset;
 // #logo
 static char logo_data[LOGO_PARTITION_SIZE];
 // #fstab
