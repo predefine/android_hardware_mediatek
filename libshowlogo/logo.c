@@ -25,3 +25,13 @@ int anim_logo_init(void){
     }
     return 0;
 }
+
+// "variadic" for stock binaries
+void fill_animation_logo(int logo_data,...){
+    //TODO
+}
+
+// All variables is global for libshowlogo, anim_show_logo is just wrapper
+void anim_show_logo(int logo_index){
+    fill_animation_logo(logo_index);
+}

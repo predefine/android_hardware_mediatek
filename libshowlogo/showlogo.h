@@ -12,10 +12,14 @@ void anim_fb_disp_update(void);
 void anim_fb_deinit(void);
 void anim_fb_addr_switch(void);
 
+//logo
+int anim_logo_init(void);
+void anim_show_logo(int logo_index);
+
 //other
 void set_draw_mode(int draw_mode);
 void anim_init(void);
-int anim_logo_init(void);
+
 void anim_deinit(void);
 void set_anim_version(int ver);
 
