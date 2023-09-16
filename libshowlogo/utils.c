@@ -1,3 +1,4 @@
+#include <fcntl.h>
 #include <showlogo.h>
 #include <cutils/properties.h>
 #include <log/log.h>
@@ -50,6 +51,9 @@ char* get_partition_path(char* partition_mount){
 }
 
 int get_int_value(char *path){
-    (void)path;
-    return 0;
+    char text[32];
+    int fd = open(path, 0);
+    if(fd < 0) return NULL;
+    read(fd, text, sizeof(text));
+    return atoi(text);
 }
