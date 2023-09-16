@@ -6,7 +6,7 @@
 
 void set_draw_mode(int draw_mode);
 void anim_init(void);
-void anim_fb_init(void);
+int anim_fb_init(void);
 void anim_logo_init(void);
 void anim_deinit(void);
 void set_anim_version(int ver);

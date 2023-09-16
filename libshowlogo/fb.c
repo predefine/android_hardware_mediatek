@@ -5,14 +5,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-void anim_fb_init(void){
+int anim_fb_init(void){
     // return if framebuffer was initialized
-    if(fb_fd > -1) return;
+    if(fb_fd > -1) return 0;
 
     fb_fd = open(FB_PATH, O_RDWR);
 
     if(fb_fd < 0){
         ALOGE("Failed open \"%s\": %s", FB_PATH, strerror(errno));
-        exit(-1);
+        return 1;
     }
+    return 0;
 }
