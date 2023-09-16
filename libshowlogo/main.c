@@ -3,8 +3,14 @@
 #include <stdlib.h>
 
 void anim_init(void){
-    anim_logo_init();
-    anim_fb_init();
+    if(anim_logo_init()){
+        ALOGE("anim_logo_init failed!");
+        exit(-1);
+    }
+    if(anim_fb_init()){
+        ALOGE("anim_fb_init failed!");
+        exit(-1);
+    }
 }
 
 
