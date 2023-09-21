@@ -39,11 +39,10 @@ void fill_animation_logo(int logo_index,...){
         return;
     }
     if(decompress_logo(ldata.offset, (int*)fb_buf,
-        ldata.logolen, fb_size) < 1){
+        ldata.logolen, fb_buf_size) < 1){
         ALOGE("Failed decompress logo with index %d!", logo_index);
         return;
     }
-    ALOGD("lel");
     anim_fb_disp_update();
     return;
 }

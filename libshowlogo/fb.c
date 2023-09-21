@@ -29,11 +29,11 @@ int anim_fb_init(void){
     ioctl(fb_fd, FBIOGET_VSCREENINFO, &fbvscreeninfo);
 
     fb_bpp      = fbvscreeninfo.bits_per_pixel;
-    fb_width    = fbfscreeninfo.line_length;
+    fb_width    = fbfscreeninfo.line_length / (fb_bpp>>3);
     fb_height   = fbvscreeninfo.yres;
-    fb_size     = fb_width * fb_height / (fb_bpp>>3);
+    fb_size     = fb_width * fb_height;
     fb_buf_size = fb_size * (fb_bpp>>3);
-    fb_buf      = mmap(0, fb_buf_size,
+    fb_buf      = mmap(0, fb_buf_size*2,
                 PROT_READ | PROT_WRITE, MAP_SHARED, fb_fd, 0);
     
     fb_red_offset = fbvscreeninfo.red.offset;
@@ -70,7 +70,43 @@ void anim_fb_disp_update(void){
         return;
     }
 
+    //lets rotate screen before update!
+    anim_fb_rotate();
+
     fbvscreeninfo.yoffset  = 0;
     fbvscreeninfo.activate = fbvscreeninfo.activate | FB_ACTIVATE_FORCE;
     ioctl(fb_fd, FBIOPUT_VSCREENINFO, &fbvscreeninfo);
+}
+
+void anim_fb_rotate(void){
+    if(hwrotation == 0) return;
+    ALOGD("%d", hwrotation);
+    int* fb_local = (int*)malloc(fb_buf_size);
+    memcpy((void*)fb_local, fb_buf, fb_buf_size);
+    if(hwrotation >= 180){
+        for(int x = 0; x < fb_height; x++)
+            for(int y = 0; y < fb_width; y++){
+                int new_pos = (fb_height - x - 1) * fb_width + (fb_width - y - 1);
+                ((int*)fb_buf)[x * fb_width + y] = ((int*)fb_local)[new_pos];
+            }
+        memcpy(fb_local, fb_buf, fb_buf_size);
+    }
+    if(hwrotation == 90)
+        for(int x = 0; x < fb_height; x++)
+            for(int y = 0; y < fb_width; y++){
+                int new_x = y;
+                int new_y = -x;
+                int new_pos = new_x * fb_height + (fb_height + new_y - 1);
+                ((int*)fb_buf)[x * fb_width + y] = fb_local[new_pos];
+            }
+    
+    if(hwrotation == 270)
+        for(int x = 0; x < fb_height; x++)
+            for(int y = 0; y < fb_width; y++){
+                int new_x = -y;
+                int new_y = x;
+                int new_pos = (fb_width + new_x - 1) * fb_height + new_y;
+                ((int*)fb_buf)[x * fb_width + y] = fb_local[new_pos];
+            }
+    free(fb_local);
 }

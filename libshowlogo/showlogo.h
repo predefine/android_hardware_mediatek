@@ -11,6 +11,8 @@ int anim_fb_init(void);
 void anim_fb_disp_update(void);
 void anim_fb_deinit(void);
 void anim_fb_addr_switch(void);
+//framebuffer helpers
+void anim_fb_rotate(void);
 
 //logo
 int anim_logo_init(void);
