@@ -3,7 +3,7 @@
 #include <linux/fb.h>
 
 // 8 Megabytes
-#define LOGO_PARTITION_SIZE 1<<23
+#define LOGO_PARTITION_SIZE (1<<23)
 #define FB_PATH "/dev/graphics/fb0"
 
 //framebuffer
@@ -15,6 +15,16 @@ void anim_fb_addr_switch(void);
 //logo
 int anim_logo_init(void);
 void anim_show_logo(int logo_index);
+void fill_animation_logo(int logo_index,...);
+
+//decompressor
+struct logo_data {
+    int logonum;
+    int logolen;
+    unsigned int* offset;
+};
+int check_logo_index_valid(int index, void* logo_ptr, struct logo_data * logo_out);
+int decompress_logo(void* logo_offset, int* fb_addr, int logolen, int fb_size);
 
 //other
 void set_draw_mode(int draw_mode);
@@ -49,7 +59,7 @@ int fb_bpp;
 int fb_red_offset;
 int fb_blue_offset;
 // #logo
-static char logo_data[LOGO_PARTITION_SIZE];
+static char *logo_data;
 // #fstab
 static char* fstab_path;
 static struct fstab* g_fstab;

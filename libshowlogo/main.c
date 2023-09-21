@@ -36,7 +36,7 @@ void show_battery_capacity(int procent){
 }
 
 void show_kernel_logo(void){
-    anim_show_logo(4);
+    anim_show_logo(38);
 }
 
 void anim_deinit(void){
