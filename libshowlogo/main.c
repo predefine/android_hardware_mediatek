@@ -31,12 +31,22 @@ void show_black_logo(void){
     anim_fb_disp_update();
 }
 
-void show_battery_capacity(int procent){
-    (void)procent;
+void show_battery_capacity(int capacity){
+    (void)capacity;
+    //TODO
+    show_low_battery();
 }
 
 void show_kernel_logo(void){
     anim_show_logo(38);
+}
+
+void show_charger_ov_logo(void){
+    anim_show_logo(3);
+}
+
+void show_low_battery(void){
+    anim_show_logo(2);
 }
 
 void anim_deinit(void){

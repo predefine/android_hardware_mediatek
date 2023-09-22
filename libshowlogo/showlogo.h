@@ -38,7 +38,7 @@ void set_anim_version(int ver);
 void show_kernel_logo(void);
 void show_low_battery(void);
 void show_charger_ov_logo(void);
-void show_battery_capacity(int procent);
+void show_battery_capacity(int capacity);
 void show_black_logo(void);
 
 // Utils
