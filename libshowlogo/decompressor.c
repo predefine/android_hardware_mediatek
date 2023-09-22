@@ -3,6 +3,12 @@
 #include <stddef.h>
 #include <zlib.h>
 
+#define Z_ERR_HANDLER(stream, ret, err, end_label, data_count_var) if(ret==err) {\
+    ALOGE("inflate: %s", #err);\
+    data_count_var = err;\
+    goto end_label; \
+}
+
 int check_logo_index_valid(int index, void * logo_ptr, struct logo_data * logo_out){
     unsigned int *logouint = (unsigned int*)logo_ptr;
     logo_out->logonum = logouint[0];
@@ -12,12 +18,11 @@ int check_logo_index_valid(int index, void * logo_ptr, struct logo_data * logo_o
     int logo_offset = logouint[2+index];
 
     if(index < logo_out->logonum - 1)
-        logo_out->logolen = logouint[3+index] + logo_offset;
+        logo_out->logolen = logouint[3+index] - logo_offset;
     else
-        logo_out->logolen = logouint[1] + logo_offset;
+        logo_out->logolen = logouint[1] - logo_offset;
     
     logo_out->offset = (unsigned int*)((char*)logo_ptr + logo_offset);
-    ALOGD("%d, %d, %d", logo_out->logonum, logo_out->logolen, logo_offset);
     return 0;
 }
 
@@ -45,19 +50,9 @@ int decompress_logo(void* logo_offset, int* fb_addr, int logolen, int fb_size){
             zstr.next_out = (Bytef*)fb_addr;
             zstr.avail_out = fb_size;
             zret = inflate(&zstr, Z_NO_FLUSH);
-            if(zret == Z_MEM_ERROR){
-                ALOGE("inflate: Z_MEM_ERROR");
-                inflateEnd(&zstr);
-                return -1;
-            } else if(zret == Z_DATA_ERROR){
-                ALOGE("inflate: Z_DATA_ERROR");
-                inflateEnd(&zstr);
-                return -1;
-            } else if(zret == Z_NEED_DICT){
-                ALOGE("inflate: Z_NEED_DICT");
-                inflateEnd(&zstr);
-                return -1;
-            }
+            Z_ERR_HANDLER(&zstr, zret, Z_MEM_ERROR, end, data_count);
+            Z_ERR_HANDLER(&zstr, zret, Z_DATA_ERROR, end, data_count);
+            Z_ERR_HANDLER(&zstr, zret, Z_NEED_DICT, end, data_count);
             data_count += fb_size - zstr.avail_out;
         }
     }

@@ -80,18 +80,15 @@ void anim_fb_disp_update(void){
 
 void anim_fb_rotate(void){
     if(hwrotation == 0) return;
-    ALOGD("%d", hwrotation);
     int* fb_local = (int*)malloc(fb_buf_size);
     memcpy((void*)fb_local, fb_buf, fb_buf_size);
-    if(hwrotation >= 180){
+    if(hwrotation == 180)
         for(int x = 0; x < fb_height; x++)
             for(int y = 0; y < fb_width; y++){
                 int new_pos = (fb_height - x - 1) * fb_width + (fb_width - y - 1);
                 ((int*)fb_buf)[x * fb_width + y] = ((int*)fb_local)[new_pos];
             }
-        memcpy(fb_local, fb_buf, fb_buf_size);
-    }
-    if(hwrotation == 90)
+    if(hwrotation == 270)
         for(int x = 0; x < fb_height; x++)
             for(int y = 0; y < fb_width; y++){
                 int new_x = y;
@@ -99,8 +96,7 @@ void anim_fb_rotate(void){
                 int new_pos = new_x * fb_height + (fb_height + new_y - 1);
                 ((int*)fb_buf)[x * fb_width + y] = fb_local[new_pos];
             }
-    
-    if(hwrotation == 270)
+    if(hwrotation == 90)
         for(int x = 0; x < fb_height; x++)
             for(int y = 0; y < fb_width; y++){
                 int new_x = -y;
